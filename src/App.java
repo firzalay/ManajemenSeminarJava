@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import model.Seminar;
+import dao.SeminarDAO;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -15,19 +17,22 @@ public class App {
             System.out.println("5. Cetak Sertifikat");
             System.out.println("6. Lihat Serfikiat");
             System.out.println("0. Keluar");
-            System.out.println("Pilih: ");
+            System.out.print("Pilih: ");
             pilih = scanner.nextInt();
+
+            scanner.nextLine();
 
             switch (pilih) {
                 case 1:
-                    System.out.println("Masukkan tema seminar: ");
+                    System.out.print("Masukkan tema seminar: ");
                     String temaSeminar = scanner.nextLine();
-                    System.out.println("Masukkan total sesi: ");
+                    System.out.print("Masukkan total sesi: ");
                     int totalSesi = scanner.nextInt();
-                    System.out.println("Masukkan tanggal seminar (YYYY-MM-DD): ");
-                    String tanggalSeminar = scanner.nextLine();
-
+                    System.out.print("Masukkan tanggal seminar (YYYY-MM-DD): ");
+                    String tanggalSeminar = scanner.next();
+                    Seminar seminar = new Seminar(temaSeminar, totalSesi, tanggalSeminar);
                     
+                    SeminarDAO.create(seminar);
                     break;
                 case 2:
 
@@ -48,12 +53,16 @@ public class App {
                 case 6:
 
                     break;
+                case 0: 
+                    System.out.println("Terimakasih...");
+                    break;
 
                 default:
                     System.out.println("Pilihan yang anda masukkan tidak valid!");
                     break;
             }
-            scanner.close();
         } while (pilih != 0);
+        scanner.close();
     }
+
 }
