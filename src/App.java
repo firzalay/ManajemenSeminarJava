@@ -1,5 +1,10 @@
 import java.util.Scanner;
+
+import model.Pendaftaran;
+import model.Peserta;
 import model.Seminar;
+import dao.PendaftaranDAO;
+import dao.PesertaDAO;
 import dao.SeminarDAO;
 
 public class App {
@@ -9,6 +14,7 @@ public class App {
         Scanner scanner = new Scanner(System.in);
 
         do {
+            // TODO : Bisa dibuat menjadi menu dan sub menu 
             System.out.println("\n=== Sistem Seminar ===");
             System.out.println("1. Tambah Seminar");
             System.out.println("2. Daftar Seminar");
@@ -31,11 +37,33 @@ public class App {
                     System.out.print("Masukkan tanggal seminar (YYYY-MM-DD): ");
                     String tanggalSeminar = scanner.next();
                     Seminar seminar = new Seminar(temaSeminar, totalSesi, tanggalSeminar);
-                    
+
                     SeminarDAO.create(seminar);
                     break;
                 case 2:
+                    // TODO (important): Jika data peserta sudah ada buat pengkondisian
+                    System.out.print("Masukkan nama peserta: ");
+                    String namaPeserta = scanner.nextLine();
+                    System.out.print("Masukkan email peserta: ");
+                    String emailPeserta = scanner.next();
+                    System.out.println("=== Daftar Seminar ===");
 
+                    Peserta peserta = new Peserta(namaPeserta, emailPeserta);
+                    PesertaDAO.create(peserta);
+
+       
+                    for (Seminar allSeminar : SeminarDAO.getAllSeminar()) {
+                        System.out.println(allSeminar.getId_seminar() + " - " + allSeminar.getTema());
+
+                    }
+
+                    //TODO (important): Buat pengkondisian jika id / nomer seminar tidak ditemukan 
+                    System.out.print("Pilih nomer seminar yang ingin diikuti: ");
+                    int idSeminar = scanner.nextInt();
+                    int idPeserta = PesertaDAO.getLatestId();
+                    Pendaftaran pendaftaran = new Pendaftaran(idPeserta, idSeminar);
+                    PendaftaranDAO.create(pendaftaran);
+                    
                     break;
 
                 case 3:
@@ -53,7 +81,7 @@ public class App {
                 case 6:
 
                     break;
-                case 0: 
+                case 0:
                     System.out.println("Terimakasih...");
                     break;
 

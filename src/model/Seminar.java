@@ -12,6 +12,15 @@ public class Seminar {
         this.tanggal = tangggal;
     }
 
+    public Seminar(int id_seminar, String tema, int total_sesi, String tangggal) {
+        this.id_seminar = id_seminar;
+        this.tema = tema;
+        this.total_sesi = total_sesi;
+        this.tanggal = tangggal;
+    }
+
+
+
     public int getId_seminar() {
         return id_seminar;
     }
