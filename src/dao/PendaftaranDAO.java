@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import model.Pendaftaran;
 
@@ -20,5 +21,23 @@ public class PendaftaranDAO {
             System.out.println("Peserta gagal didaftarkan!");
             e.printStackTrace();
         }
+    }
+
+    public static int getIdPendaftaran(int idPeserta, int idSeminar) {
+        int idPendaftaran = 0;
+        String query = "SELECT id_pendaftaran from pendaftaran where id_peserta = " + idPeserta + " AND id_seminar = " + idSeminar;
+        try (Connection conn = ConnectionProvider.getCon()) {
+            PreparedStatement ps = conn.prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                idPendaftaran = rs.getInt("id_pendaftaran");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return idPendaftaran;
     }
 }

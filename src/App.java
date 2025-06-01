@@ -1,8 +1,10 @@
 import java.util.Scanner;
 
+import model.Kehadiran;
 import model.Pendaftaran;
 import model.Peserta;
 import model.Seminar;
+import dao.KehadiranDAO;
 import dao.PendaftaranDAO;
 import dao.PesertaDAO;
 import dao.SeminarDAO;
@@ -14,7 +16,7 @@ public class App {
         Scanner scanner = new Scanner(System.in);
 
         do {
-            // TODO : Bisa dibuat menjadi menu dan sub menu 
+            // TODO : Bisa dibuat menjadi menu dan sub menu
             System.out.println("\n=== Sistem Seminar ===");
             System.out.println("1. Tambah Seminar");
             System.out.println("2. Daftar Seminar");
@@ -51,22 +53,50 @@ public class App {
                     Peserta peserta = new Peserta(namaPeserta, emailPeserta);
                     PesertaDAO.create(peserta);
 
-       
                     for (Seminar allSeminar : SeminarDAO.getAllSeminar()) {
                         System.out.println(allSeminar.getId_seminar() + " - " + allSeminar.getTema());
 
                     }
 
-                    //TODO (important): Buat pengkondisian jika id / nomer seminar tidak ditemukan 
-                    System.out.print("Pilih nomer seminar yang ingin diikuti: ");
+                    // TODO (important): Buat pengkondisian jika id / nomer seminar tidak ditemukan
+                    System.out.print("Pilih ID seminar yang ingin diikuti: ");
                     int idSeminar = scanner.nextInt();
                     int idPeserta = PesertaDAO.getLatestId();
                     Pendaftaran pendaftaran = new Pendaftaran(idPeserta, idSeminar);
                     PendaftaranDAO.create(pendaftaran);
-                    
+
                     break;
 
                 case 3:
+                    System.out.println("=== Input Kehadiran ===");
+                    System.out.print("Masukkan ID Peserta: ");
+                    idPeserta = scanner.nextInt();
+
+                    System.out.println("Seminar yang diikuti: ");
+                    for (Seminar allSeminarByPeserta : SeminarDAO.getAllSeminarByPeserta(idPeserta)) {
+                        System.out.println(allSeminarByPeserta.getId_seminar() + " - " + allSeminarByPeserta.getTema());
+                    }
+
+                    System.out.print("Masukkan ID Seminar: ");
+                    idSeminar = scanner.nextInt();
+
+                    int idPendaftaran = PendaftaranDAO.getIdPendaftaran(idPeserta, idSeminar);
+
+                    System.out.print("Masukkan Sesi ke - : ");
+                    int sesiKe = scanner.nextInt();
+
+                    System.out.print("Hadir? (y/n) : ");
+                    String kondisiHadir = scanner.next();
+
+                    if (kondisiHadir.equals("y")) {
+                        Kehadiran kehadiran = new Kehadiran(idPendaftaran, sesiKe, "hadir");
+                        KehadiranDAO.create(kehadiran);
+                    } else if (kondisiHadir.equals("n")) {
+                        Kehadiran kehadiran = new Kehadiran(idPendaftaran, sesiKe, "tidak hadir");
+                        KehadiranDAO.create(kehadiran);
+                    } else {
+                        System.out.println("Pilihan tidak valid!");
+                    }
 
                     break;
 

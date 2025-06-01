@@ -51,4 +51,31 @@ public class SeminarDAO {
         return arrayList;
 
     }
+
+    public static ArrayList<Seminar> getAllSeminarByPeserta(int idPeserta) {
+        ArrayList<Seminar> arrayList = new ArrayList<>();
+        String query = "SELECT seminar.* FROM seminar JOIN pendaftaran ON seminar.id_seminar = pendaftaran.id_seminar WHERE pendaftaran.id_peserta = " + idPeserta;
+
+        try (Connection conn = ConnectionProvider.getCon()) {
+            PreparedStatement ps = conn.prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id_seminar");
+                String tema = rs.getString("tema");
+                int totalSesi = rs.getInt("total_sesi");
+                String tanggal = rs.getString("tanggal");
+
+                Seminar seminar = new Seminar(id, tema, totalSesi, tanggal);
+                arrayList.add(seminar);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return arrayList;
+
+    }
 }
